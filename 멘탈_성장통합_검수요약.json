@@ -1,0 +1,15 @@
+{
+  "records": 749,
+  "identityKeys": 748,
+  "boneValid": 748,
+  "delayed": 144,
+  "stageConflicts": 4,
+  "stages": {
+    "가속기": 275,
+    "급성장 이전": 248,
+    "급성장기": 177,
+    "감속기": 42,
+    "종료기": 3,
+    "확인 필요": 4
+  }
+}

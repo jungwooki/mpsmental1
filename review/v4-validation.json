@@ -1,0 +1,56 @@
+{
+  "pageCount": 4,
+  "records": 749,
+  "layoutRecordsChecked": 749,
+  "combinations": 58,
+  "problems": [],
+  "images": [
+    {
+      "src": "assets/mps-logo-black.png",
+      "ok": true
+    },
+    {
+      "src": "assets/growth-mental-watercolor-v4.png",
+      "ok": true
+    },
+    {
+      "src": "assets/players/active-player-10.jpg",
+      "ok": true
+    },
+    {
+      "src": "assets/players/active-player-11.jpg",
+      "ok": true
+    },
+    {
+      "src": "assets/players/active-player-12.jpg",
+      "ok": true
+    },
+    {
+      "src": "assets/mps-logo-black.png",
+      "ok": true
+    },
+    {
+      "src": "assets/mps-logo-black.png",
+      "ok": true
+    },
+    {
+      "src": "assets/mps-logo-black.png",
+      "ok": true
+    },
+    {
+      "src": "assets/mps-team-doctor-mental-coach.png",
+      "ok": true
+    }
+  ],
+  "late": 144,
+  "filtered": 144,
+  "empty": {
+    "reportHidden": true,
+    "printDisabled": true
+  },
+  "mobile": {
+    "scroll": 390,
+    "width": 390
+  },
+  "errors": []
+}

@@ -1,0 +1,10 @@
+{
+  "six_month_boundary": true,
+  "one_day_before_not_delayed": true,
+  "one_day_after_delayed": true,
+  "leap_birthday": true,
+  "original_fields_unchanged": true,
+  "record_count_unchanged": true,
+  "invalid_bone_not_delayed": true,
+  "exact_three_focus_metrics": true
+}
