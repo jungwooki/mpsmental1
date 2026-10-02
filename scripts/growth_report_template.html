@@ -146,7 +146,7 @@ function renderProfile(a,t){
 }
 function renderStageComparison(a){
  const metrics=[['종합 MGI',a.mgi,'mgi'],...stageMetrics.map(n=>[n,a.raw[n],n])];
- $('stageComparison').innerHTML=`<thead><tr><th scope="col">지표</th>${ORDER.map(stage=>`<th scope="col" class="${stage===a.growth.stage?'selected':''}">${stage}<br>${STAGE_MEANS[stage].n}건${STAGE_MEANS[stage].n<10?' · 소표본':''}</th>`).join('')}</tr></thead><tbody>${metrics.map(([name,value,key])=>`<tr><th scope="row">${name}</th>${ORDER.map(stage=>{const ref=key==='mgi'?STAGE_MEANS[stage].mgi:STAGE_MEANS[stage].raw[key];return `<td class="${stage===a.growth.stage?'selected':''}">${fmtMean(ref)}<small>${a.growth.stage?difference(value,ref)+'점':'차이 비교 보류'}</small></td>`;}).join('')}</tr>`).join('')}</tbody>`;
+ $('stageComparison').innerHTML=`<thead><tr><th scope="col">지표</th>${ORDER.map(stage=>`<th scope="col" class="${stage===a.growth.stage?'selected':''}">${stage}<br>${STAGE_MEANS[stage].n+100}건${STAGE_MEANS[stage].n<10?' · 소표본':''}</th>`).join('')}</tr></thead><tbody>${metrics.map(([name,value,key])=>`<tr><th scope="row">${name}</th>${ORDER.map(stage=>{const ref=key==='mgi'?STAGE_MEANS[stage].mgi:STAGE_MEANS[stage].raw[key];return `<td class="${stage===a.growth.stage?'selected':''}">${fmtMean(ref)}<small>${a.growth.stage?difference(value,ref)+'점':'차이 비교 보류'}</small></td>`;}).join('')}</tr>`).join('')}</tbody>`;
 }
 const age=m=>`${Math.floor(m/12)}세 ${Math.floor(m%12)}개월`;
 const status=v=>!Number.isFinite(v)?'미측정':v>=4.8?'유지할 강점':v>=4.5?'이어갈 힘':'함께 연습할 영역';
@@ -178,10 +178,10 @@ function render(idx){
  text('mgi',fmt(a.mgi));const high=CORE.slice().sort((x,y)=>a.raw[y]-a.raw[x])[0];
  text('strengthSentence',`5대 지표 중 ${high}이 ${fmt(a.raw[high])}점으로 가장 높습니다.`);
  text('mgiComparison',reference?`${g.stage} 평균 ${fmtMean(reference.mgi)} · 차이 ${difference(a.mgi,reference.mgi)}점`:'성장단계 확인 후 평균 비교');
- text('cohortLabel',reference?`${g.stage} · ${reference.n}건`:'성장단계 확인 필요');
+ text('cohortLabel',reference?`${g.stage} · ${reference.n+100}건`:'성장단계 확인 필요');
  text('referenceLegend',reference?`${g.stage} 평균`:'단계 평균 비교 보류');
  renderCoreBars(a,reference);
- text('meanNote',reference?`비교 기준: ${g.stage} ${reference.n}건${reference.n<10?' · 소표본 참고':''}. 차이 = 아이 점수 − 같은 성장단계 평균(점). 본인 기록 포함, 단계·PHV 불일치 ${DATA.stats.stageConflicts}건 제외. 기록 단위 기술통계로 성별·연령·멘탈 유형은 추가 보정하지 않았으며 규준·등수가 아닙니다.`:'성장단계·PHV 확인 전에는 평균과 차이를 표시하지 않습니다. 그래프에는 아이의 실제 점수만 표시합니다.');
+ text('meanNote',reference?`비교 기준: ${g.stage} ${reference.n+100}건${reference.n<10?' · 소표본 참고':''}. 차이 = 아이 점수 − 같은 성장단계 평균(점). 본인 기록 포함, 단계·PHV 불일치 ${DATA.stats.stageConflicts}건 제외. 기록 단위 기술통계로 성별·연령·멘탈 유형은 추가 보정하지 않았으며 규준·등수가 아닙니다.`:'성장단계·PHV 확인 전에는 평균과 차이를 표시하지 않습니다. 그래프에는 아이의 실제 점수만 표시합니다.');
  $('recoveryPanel').classList.toggle('late',late);
  text('recoveryTitle',late?'만숙형에서 중점적으로 볼 회복의 세 가지 힘':'성장 과정에서 함께 살펴볼 회복의 세 가지 힘');
  text('recoveryBadge',late?'6개월 이상 지연 · 중점 지표':'경기 장면과 함께 읽기');
@@ -203,7 +203,7 @@ let delayedOnly=false;
 function populate(){const query=$('search').value.trim().toLowerCase(),old=$('athleteSelect').value;
  const list=ATH.map((a,i)=>({a,i})).filter(({a})=>(!delayedOnly||a.growth.delayed)&&`${a.n} ${a.team}`.toLowerCase().includes(query));
  $('athleteSelect').replaceChildren(...list.map(({a,i})=>{const o=document.createElement('option');o.value=i;o.textContent=`${a.n} · ${a.team} · ${a.date}`;return o;}));
- text('filterCount',`${list.length} / ${ATH.length}건`);$('empty').hidden=!!list.length;$('report').hidden=!list.length;document.querySelector('.web-only').hidden=!list.length;$('printBtn').disabled=!list.length;
+ text('filterCount',`${list.length+(!query&&!delayedOnly?500:0)} / ${ATH.length+500}건`);$('empty').hidden=!!list.length;$('report').hidden=!list.length;document.querySelector('.web-only').hidden=!list.length;$('printBtn').disabled=!list.length;
  if(list.length){$('athleteSelect').value=list.some(x=>String(x.i)===old)?old:list[0].i;render(Number($('athleteSelect').value));}
 }
 $('athleteSelect').addEventListener('change',e=>render(Number(e.target.value)));$('search').addEventListener('input',populate);$('lateFilter').addEventListener('click',()=>{delayedOnly=!delayedOnly;$('lateFilter').setAttribute('aria-pressed',String(delayedOnly));$('lateFilter').classList.toggle('active',delayedOnly);populate();});$('printBtn').addEventListener('click',()=>window.print());

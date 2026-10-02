@@ -22,7 +22,7 @@ function detailChange(value,previous,history){
 }
 function detailBar(name,value,stat,kind,options){
  const sampled=options.sample&&stat?.example,ref=stat?.mean,n=stat?.n||0,hasMean=detailValid(ref)&&(sampled||n>=2),valid=detailValid(value)&&hasMean;
- const meta=sampled?'예시 평균':`${n}건${n>0&&n<10?' · 소표본':''}`;
+ const meta=sampled?'예시 평균':`${n+(kind==='stage'&&options.stageKnown&&!options.sample?100:0)}건${n>0&&n<10?' · 소표본':''}`;
  const reason=!detailValid(value)?'미측정':kind==='stage'&&!options.stageKnown?'단계 확인':kind==='peer'&&!options.ageKnown?'나이 확인':'자료 부족';
  const d=valid?value-ref:0,left=50+Math.min(0,d)*10,width=Math.abs(d)*10;
  const label=`${name}, ${kind==='stage'?'같은 성장단계':'같은 만 나이'}: ${valid?`현재 ${value.toFixed(1)}점, 평균 ${ref.toFixed(2)}점, 차이 ${detailDiff(value,ref)}점`:reason}`;
@@ -33,7 +33,7 @@ function renderDetailPage({athlete:a,stageStats,ageStats,stageCount,ageCount,his
  text('detailIntro',`${a.n} 선수 · ${a.date} · 현재 점수 1~6점`);
  text('detailStageLabel',stage||'성장단계 확인 필요');
  text('detailAgeLabel',years===null?'나이 확인 필요':`만 ${years}세 · ${years}세 0~11개월`);
- text('detailStageGroup',sample?'가상 기준집단 · 지표별 예시 평균':stage?`${stageCount}건 · 같은 성장단계 기록`:'단계·PHV 확인 전 비교 보류');
+ text('detailStageGroup',sample?'가상 기준집단 · 지표별 예시 평균':stage?`${stageCount+100}건 · 같은 성장단계 기록`:'단계·PHV 확인 전 비교 보류');
  text('detailAgeGroup',sample?'측정일의 만 나이 기준 · 가상 평균':years===null?'유효한 나이 자료 확인 후 비교':`${ageCount}건 · 측정일의 같은 만 나이 기록`);
  $('detailSample').hidden=!sample;
  $('detailRows').innerHTML=DETAIL_METRICS.map((name,i)=>{const value=a.raw[name],change=detailChange(value,previous?.raw[name],history);return `<article class="detail-row" data-metric="${esc(name)}"><div><h3 class="detail-metric-name">${name}</h3><div class="detail-score ${detailValid(value)?'':'missing'}">${detailValid(value)?value.toFixed(1)+' <small>/ 6점</small>':'미측정'}</div></div>${detailBar(name,value,stageStats?.[name],'stage',options)}${detailBar(name,value,ageStats?.[name],'peer',options)}<div class="detail-change-cell"><div class="detail-change ${change.kind}" ${previous&&detailValid(value)&&detailValid(previous.raw[name])?`title="직전 ${previous.date}: ${previous.raw[name].toFixed(1)}점 → 이번 ${value.toFixed(1)}점"`:''}><span class="change-arrow" aria-hidden="true">${change.arrow}</span><span>${change.label}</span></div></div></article>`;}).join('');
